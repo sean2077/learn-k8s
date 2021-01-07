@@ -80,6 +80,68 @@ Kubernetes 背后的架构概念。
 
 ### [Pods](https://kubernetes.io/zh/docs/concepts/workloads/pods/)
 
+Pod: 运行在集群上的一组容器，是 kubernetes 中最小的可部署计算单位。
+
+**内部容器特点**
+
+- 有确定的生命周期的
+
+- 共享内存/网络资源
+- 共享容器启动规范
+- 内容协同、共同调度且共享上下文（Linux 命名空间，控制组及其他容器隔离方面）
+
+注：从官网描述来看，一个 Pod 的所有容器应该在同一个物理机或虚拟机上运行。
+
+> The containers in a Pod are automatically co-located and co-scheduled on the same physical or virtual machine in the cluster.
+
+Pod 除了 app 容器外还可有初始化容器，初始化容器在 app 容器启动之前执行。
+
+**运行方式**
+
+- 一个 pod 运行一个容器（one-container-per-Pod），最常用
+- 一个 pod 运行多个协同的容器
+
+**创建 Pod**
+
+通常通过负载资源创建 Pod
+
+Workload resources: 通过 controller 管理一组 Pod。内置负载资源包括：
+
+- Deployment 和 ReplicaSet
+- StatefulSet
+- DaemonSet
+- Job 和 CronJob
+
+支持自定义负载资源。
+
+Controller 通常通过`pod template`创建 Pods。
+
+**更新和替换 Pod**
+
+通常，我们需要通过 Controller 间接管理 Pod，修改 pod template 然后交由 controller 去操作。一般而言，pod template 的修改不会对现存的 pod 造成影响，而是会新建基于当前模板的 pods。但这种行为也取决于负载资源的[更新策略](https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#updating-statefulsets)。
+
+kubernetes 也支持直接对 Pod 进行更新操作，如 patch，replace 操作，但存在一定限制。
+
+**资源共享和通信**
+
+在同一个 Pod 内，所有容器共享一个 IP 地址和端口空间，并且可以通过 `localhost` 发现对方。 他们也能通过如 SystemV 信号量或 POSIX 共享内存这类标准的进程间通信方式互相通信。 不同 Pod 中的容器的 IP 地址互不相同，没有 [特殊配置](https://kubernetes.io/zh/docs/concepts/policy/pod-security-policy/) 就不能使用 IPC 进行通信。 如果某容器希望与运行于其他 Pod 中的容器通信，可以通过 IP 联网的方式实现。
+
+Pod 中的容器所看到的系统主机名与为 Pod 配置的 `name` 属性值相同。
+
+**容器的特权模式**
+
+Pod 中的任何容器都可以使用容器规约中的 [安全性上下文](https://kubernetes.io/zh/docs/tasks/configure-pod-container/security-context/)中的 `privileged` 参数启用特权模式。 这对于想要使用使用操作系统管理权能（Capabilities，如操纵网络堆栈和访问设备） 的容器很有用。 容器内的进程几乎可以获得与容器外的进程相同的特权。
+
+> **说明：** 你的[容器运行时](https://kubernetes.io/zh/docs/setup/production-environment/container-runtimes)必须支持 特权容器的概念才能使用这一配置。
+
+**静态 Pod**
+
+_静态 Pod（Static Pod）_ 直接由特定节点上的 `kubelet` 守护进程管理， 不需要[API 服务器](https://kubernetes.io/zh/docs/reference/command-line-tools-reference/kube-apiserver/)看到它们。 尽管大多数 Pod 都是通过控制面（例如，[Deployment](https://kubernetes.io/zh/docs/concepts/workloads/controllers/deployment/)） 来管理的，对于静态 Pod 而言，`kubelet` 直接监控每个 Pod，并在其失效时重启之。
+
+静态 Pod 通常绑定到某个节点上的 [kubelet](https://kubernetes.io/docs/reference/generated/kubelet)。 其主要用途是运行自托管的控制面。 在自托管场景中，使用 `kubelet` 来管理各个独立的 [控制面组件](https://kubernetes.io/zh/docs/concepts/overview/components/#control-plane-components)。
+
+`kubelet` 自动尝试为每个静态 Pod 在 Kubernetes API 服务器上创建一个 [镜像 Pod](https://kubernetes.io/zh/docs/reference/glossary/?all=true#term-mirror-pod)。 这意味着在节点上运行的 Pod 在 API 服务器上是可见的，但不可以通过 API 服务器来控制。
+
 #### Pod 生命周期
 
 #### Init 容器
