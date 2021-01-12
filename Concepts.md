@@ -1543,7 +1543,7 @@ spec:
     app: nginx
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kfeind: StatefulSet
 metadata:
   name: web
 spec:
@@ -1669,19 +1669,64 @@ StatefulSet 不应将 `pod.Spec.TerminationGracePeriodSeconds` 设置为 0。 �
 
 #### [DaemonSet](https://kubernetes.io/zh/docs/concepts/workloads/controllers/daemonset/)
 
+DaemonSet 确保全部（或某些）节点上运行一个 Pod 副本。
+
+DaemonSet 的一些典型用法：
+
+- 在每个节点上运行集群守护进程
+- 在每个节点上运行日志收集守护进程
+- 在每个节点上运行监控守护进程
+
 #### [Jobs](https://kubernetes.io/zh/docs/concepts/workloads/controllers/job/)
+
+Job 会创建一个或者多个 Pods，并确保指定数量的 Pods 成功终止。 随着 Pods 成功结束，Job 跟踪记录成功完成的 Pods 个数。 当数量达到指定的成功个数阈值时，任务（即 Job）结束。
 
 #### [垃圾收集](https://kubernetes.io/zh/docs/concepts/workloads/controllers/garbage-collection/)
 
+Kubernetes 垃圾收集器的作用是删除某些曾经拥有属主（Owner）但现在不再拥有属主的对象。
+
 #### [已完成资源的 TTL 控制器](https://kubernetes.io/zh/docs/concepts/workloads/controllers/ttlafterfinished/)
 
+TTL(time to live)
+
 #### [CronJob](https://kubernetes.io/zh/docs/concepts/workloads/controllers/cron-jobs/)
+
+_Cron Job_ 创建基于时间调度的 [Jobs](https://kubernetes.io/zh/docs/concepts/workloads/controllers/job/)。
+
+一个 CronJob 对象就像 _crontab_ (cron table) 文件中的一行。 它用 [Cron](https://en.wikipedia.org/wiki/Cron) 格式进行编写， 并周期性地在给定的调度时间执行 Job。
 
 #### [ReplicationController](https://kubernetes.io/zh/docs/concepts/workloads/controllers/replicationcontroller/)
 
 ## [服务、负载均衡和联网](https://kubernetes.io/zh/docs/concepts/services-networking/)
 
-Kubernetes 网络背后的概念和资源。
+Kubernetes 网络解决四方面的问题：
+
+- 一个 Pod 中的容器之间通过本地回路（loopback）通信。
+- 集群网络在不同 pod 之间提供通信。
+- Service 资源允许你对外暴露 Pods 中运行的应用程序，以支持来自于集群外部的访问。
+- 可以使用 Services 来发布仅供集群内部使用的服务。
+
+---
+
+### [服务](https://kubernetes.io/zh/docs/concepts/services-networking/service/)
+
+### [服务拓扑（Service Topology）](https://kubernetes.io/zh/docs/concepts/services-networking/service-topology/)
+
+### [Pod 与 Service 的 DNS](https://kubernetes.io/zh/docs/concepts/services-networking/dns-pod-service/)
+
+### [使用 Service 连接到应用](https://kubernetes.io/zh/docs/concepts/services-networking/connect-applications-service/)
+
+### [端点切片（Endpoint Slices）](https://kubernetes.io/zh/docs/concepts/services-networking/endpoint-slices/)
+
+### [Ingress](https://kubernetes.io/zh/docs/concepts/services-networking/ingress/)
+
+### [Ingress 控制器](https://kubernetes.io/zh/docs/concepts/services-networking/ingress-controllers/)
+
+### [网络策略](https://kubernetes.io/zh/docs/concepts/services-networking/network-policies/)
+
+### [使用 HostAliases 向 Pod /etc/hosts 文件添加条目](https://kubernetes.io/zh/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/)
+
+### [IPv4/IPv6 双协议栈](https://kubernetes.io/zh/docs/concepts/services-networking/dual-stack/)
 
 ## [存储](https://kubernetes.io/zh/docs/concepts/storage/)
 
