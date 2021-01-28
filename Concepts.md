@@ -1710,6 +1710,12 @@ Kubernetes 网络解决四方面的问题：
 
 ### [服务](https://kubernetes.io/zh/docs/concepts/services-networking/service/)
 
+将运行在一组 [Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/) 上的应用程序公开为网络服务的抽象方法。
+
+Kubernetes 为 Pods 提供自己的 IP 地址，并为一组 Pod 提供相同的 DNS 名， 并且可以在它们之间进行负载均衡。
+
+
+
 ### [服务拓扑（Service Topology）](https://kubernetes.io/zh/docs/concepts/services-networking/service-topology/)
 
 ### [Pod 与 Service 的 DNS](https://kubernetes.io/zh/docs/concepts/services-networking/dns-pod-service/)
